@@ -1,0 +1,156 @@
+{% extends "base_data.html" %}
+
+{% block head %}
+{{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='javascripts/jquery_ajax_actuator.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='javascripts/use_actuator.js') }}"></script>
+{% endblock %}
+
+{% block page_content %}
+{{ super() }}
+<h2>空气净化器</h2>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <td>开关</td>
+            <td id="air_text"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div>
+    <button type="button" class="btn btn-primary" onclick="func_air_open()">开启</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_off()">关闭</button>
+</div>
+<h2>空调执行器</h2>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>开关</th>
+            <th>模式</th>
+            <th>温度(℃)</th>
+            <th>风速</th>
+            <th>睡眠</th>
+            <th>睡眠时间(h)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td id="air_switch_text"></td>
+            <td id="air_mode_text"></td>
+            <td id="air_temperature_text"></td>
+            <td id="air_wind_text"></td>
+            <td id="air_sleep_text"></td>
+            <td id="air_sleep_time_text"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>扫风</th>
+            <th>超强</th>
+            <th>灯光</th>
+            <th>健康</th>
+            <th>干燥/辅热</th>
+            <th>数显</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td id="air_sweep_text"></td>
+            <td id="air_super_text"></td>
+            <td id="air_light_text"></td>
+            <td id="air_health_text"></td>
+            <td id="air_dry_and_heat_text"></td>
+            <td id="air_display_text"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div>
+    <h3>开关</h3>
+    <button type="button" class="btn btn-primary" onclick="func_air_switch_on()">开启</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_switch_off()">关闭</button>
+</div>
+<div>
+    <h3>模式</h3>
+    <button type="button" class="btn btn-primary" onclick="func_air_mode_fan()">换风</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_mode_auto()">自动</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_mode_dry()">除湿</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_mode_heat()">制热</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_mode_cool()">制冷</button>
+</div>
+<h3>温度（摄氏度）</h3>
+<div class="row">
+    <div class="col-md-2">
+        <input id="temperature" type="text" class="form-control">
+    </div>
+    <div class="col-md-1">
+        <button type="button" class="btn btn-primary" onclick="func_submit_temperature()">提交</button>
+    </div>
+</div>
+<div>
+    <h3>风速</h3>
+    <button type="button" class="btn btn-primary" onclick="func_air_wind_zero()">自动</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_wind_low()">一级</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_wind_middle()">二级</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_wind_high()">三级</button>
+</div>
+<div>
+    <h3>扫风</h3>
+    <button type="button" class="btn btn-primary" onclick="func_air_sweep_seesaw()">上下</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_sweep_around()">左右</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_sweep_all()">上下左右</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_sweep_none()">关闭</button>
+</div>
+<div>
+    <h3>睡眠</h3>
+    <button type="button" class="btn btn-primary" onclick="func_air_sleep_sleep()">打开</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_sleep_wake()">关闭</button>
+</div>
+<h3>睡眠时间（小时）</h3>
+<div class="row">
+    <div class="col-md-2">
+        <input id="sleep_time" type="text" class="form-control">
+    </div>
+    <div class="col-md-1">
+        <button type="button" class="btn btn-primary" onclick="func_submit_sleep_time()">提交</button>
+    </div>
+</div>
+<div>
+    <h3>超强</h3>
+    <button type="button" class="btn btn-primary" onclick="func_air_super_on()">开启</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_super_off()">关闭</button>
+</div>
+<div>
+    <h3>灯光</h3>
+    <button type="button" class="btn btn-primary" onclick="func_air_light_on()">开启</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_light_off()">关闭</button>
+</div>
+<div>
+    <h3>健康</h3>
+    <button type="button" class="btn btn-primary" onclick="func_air_health_health()">健康</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_health_ventilate()">换气</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_health_all()">健康+换气</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_health_none()">关闭</button>
+</div>
+<div>
+    <h3>干燥/辅热</h3>
+    <button type="button" class="btn btn-primary" onclick="func_air_dry_and_heat_on()">开启</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_dry_and_heat_off()">关闭</button>
+</div>
+<div>
+    <h3>数显</h3>
+    <button type="button" class="btn btn-primary" onclick="func_air_display_set()">设定温度</button>
+    <!--<button type="button" class="btn btn-primary" onclick="func_air_display_off()">关闭</button>-->
+    <button type="button" class="btn btn-primary" onclick="func_air_display_indoor()">室内温度</button>
+    <!--<button type="button" class="btn btn-primary" onclick="func_air_display_outdoor()">室外温度</button>-->
+</div>
+
+{% endblock %}
+

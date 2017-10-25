@@ -1,0 +1,210 @@
+{% extends "base_data.html" %}
+
+{% block head %}
+{{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='javascripts/jquery_ajax_TemAndHum.js') }}"></script>
+
+<script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+
+<script src="http://cdn.bootcss.com/crypto-js/3.1.9/core.js"></script>
+<script src="http://cdn.bootcss.com/crypto-js/3.1.9/evpkdf.js"></script>
+<script src="http://cdn.bootcss.com/crypto-js/3.1.9/cipher-core.js"></script>
+<script src="http://cdn.bootcss.com/crypto-js/3.1.9/aes.js"></script>
+<script src="http://cdn.bootcss.com/crypto-js/3.1.9/hmac.js"></script>
+<script src="http://cdn.bootcss.com/crypto-js/3.1.9/sha1.js"></script>
+<script src="http://cdn.bootcss.com/crypto-js/3.1.9/hmac-sha1.js"></script>
+<script src="http://cdn.bootcss.com/crypto-js/3.1.9/enc-base64.js"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='javascripts/jsonp_callback.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='javascripts/use_weather_api.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='javascripts/Tem_use_chart_and_level.js') }}"></script>
+{% endblock %}
+
+{% block page_content %}
+{{ super() }}
+<h2>室内</h2>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <td>温度</td>
+            <td id="temperature">Please wait...</td>
+        </tr>
+        <tr>
+            <td>等级</td>
+            <td id="temperature_level">Please wait...</td>
+        </tr>
+        <tr>
+            <td>走势</td>
+            <td>
+                <div style="height:400px;width:1000px" id="container_temperature">Please wait...</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <td>湿度</td>
+            <td id="humidity">Please wait...</td>
+        </tr>
+        <tr>
+            <td>等级</td>
+            <td id="humidity_level">Please wait...</td>
+        </tr>
+        <tr>
+            <td>走势</td>
+            <td>
+                <div style="height:400px;width:1000px" id="container_humidity">Please wait...</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<h2>室外</h2>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <td>温度</td>
+            <td id="outdoor-temperature">Please wait...</td>
+        </tr>
+        <tr>
+            <td>等级</td>
+            <td id="outdoor-temperature_level">Please wait...</td>
+        </tr>
+        <tr>
+            <td>走势</td>
+            <td>
+                <div style="height:400px;width:1000px" id="container_outdoor_temperature">Please wait...</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <td>湿度</td>
+            <td id="outdoor-humidity">Please wait...</td>
+        </tr>
+        <tr>
+            <td>等级</td>
+            <td id="outdoor-humidity_level">Please wait...</td>
+        </tr>
+        <tr>
+            <td>走势</td>
+            <td>
+                <div style="height:400px;width:1000px" id="container_outdoor_humidity">Please wait...</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<h2>是否降雨</h2>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <td>降雨</td>
+            <td id="weather">Please wait...</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<h2>天气预报</h2>
+<h3>当前天气</h3>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <td>温度</td>
+            <td id="current_weather_temperature">Please wait...</td>
+        </tr>
+        <tr>
+            <td>天气类型</td>
+            <td id="current_weather_text">Please wait...</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<h3>未来三天天气</h3>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>日期</th>
+            <th>白天天气</th>
+            <th>夜间天气</th>
+            <th>最高温</th>
+            <th>最低温</th>
+            <th>风向</th>
+            <th>风方向角</th>
+            <th>风速</th>
+            <th>风力等级</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td id="today">Please wait...</td>
+            <td id="today_text_day">Please wait...</td>
+            <td id="today_text_night">Please wait...</td>
+            <td id="today_high">Please wait...</td>
+            <td id="today_low">Please wait...</td>
+            <td id="today_wind_direction">Please wait...</td>
+            <td id="today_wind_direction_degree">Please wait...</td>
+            <td id="today_wind_speed">Please wait...</td>
+            <td id="today_wind_scale">Please wait...</td>
+        </tr>
+        <tr>
+            <td id="tomorrow">Please wait...</td>
+            <td id="tomorrow_text_day">Please wait...</td>
+            <td id="tomorrow_text_night">Please wait...</td>
+            <td id="tomorrow_high">Please wait...</td>
+            <td id="tomorrow_low">Please wait...</td>
+            <td id="tomorrow_wind_direction">Please wait...</td>
+            <td id="tomorrow_wind_direction_degree">Please wait...</td>
+            <td id="tomorrow_wind_speed">Please wait...</td>
+            <td id="tomorrow_wind_scale">Please wait...</td>
+        </tr>
+        <tr>
+            <td id="after_tomorrow">Please wait...</td>
+            <td id="after_tomorrow_text_day">Please wait...</td>
+            <td id="after_tomorrow_text_night">Please wait...</td>
+            <td id="after_tomorrow_high">Please wait...</td>
+            <td id="after_tomorrow_low">Please wait...</td>
+            <td id="after_tomorrow_wind_direction">Please wait...</td>
+            <td id="after_tomorrow_wind_direction_degree">Please wait...</td>
+            <td id="after_tomorrow_wind_speed">Please wait...</td>
+            <td id="after_tomorrow_wind_scale">Please wait...</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<h3>生活指数</h3>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <th>穿衣</th>
+            <th>洗车</th>
+            <th>紫外线强度</th>
+            <th>旅游</th>
+            <th>运动</th>
+            <th>感冒</th>
+        </tr>
+        <tr>
+            <td id="dressing">Please wait...</td>
+            <td id="car_washing">Please wait...</td>
+            <td id="uv">Please wait...</td>
+            <td id="travel">Please wait...</td>
+            <td id="sport">Please wait...</td>
+            <td id="flu">Please wait...</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
