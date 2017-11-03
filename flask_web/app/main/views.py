@@ -4,7 +4,7 @@ from . import main
 import requests
 import json
 
-r = requests.get('http://localhost:5001')
+r = requests.get('http://localhost:5001/api/v1.0/sensor_data')
 temp_data = json.loads(r.text)
 
 
