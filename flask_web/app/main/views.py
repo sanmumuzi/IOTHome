@@ -4,7 +4,7 @@ from . import main
 import requests
 import json
 
-r = requests.get('http://120.25.242.228:29040')
+r = requests.get('http://localhost:5001')
 temp_data = json.loads(r.text)
 
 
