@@ -28,40 +28,64 @@ def on_connect(client, userdata, flag, rc):
     # GPIO.output(led_1, True)
 
 
+# topic_dict = {
+#     'TemAndHum': {
+#         'humidity': None,
+#         'temperature': None,
+#         'outdoor/humidity': None,
+#         'outdoor/temperature': None,
+#         'weather': None
+#     },
+#     'air_quality': {
+#         'CO2': None,
+#         'PM25': None,
+#         'TVOC': None,
+#         'CH2O': None
+#     },
+#     # 'actuator': {
+#     #     'air cleaner': None,
+#     #     'air condition/display': None,
+#     #     'air condition/dry/heat': None,
+#     #     'air condition/health': None,
+#     #     'air condition/light': None,
+#     #     'air condition/mode': None,
+#     #     'air condition/sleep': None,
+#     #     'air condition/sleep time': None,
+#     #     'air condition/super': None,
+#     #     'air condition/sweep': None,
+#     #     'air condition/temperature': None,
+#     #     'air condition/wind': None,
+#     #     'air condition/switch': None
+#     # }
+#     'chart': {
+#         'humidity_chart': None,
+#         'temperature_chart': None,
+#         'outdoor/humidity_chart': None,
+#         'outdoor/temperature_chart': None,
+#         'CO2_chart': None,
+#         'PM25_chart': None,
+#         'TVOC_chart': None,
+#         'CH2O_chart': None
+#     },
+# }
+
 topic_dict = {
     'TemAndHum': {
         'humidity': None,
         'temperature': None,
         'outdoor/humidity': None,
         'outdoor/temperature': None,
-        'weather': None
+        'weather': None,  # rain
+        'humidity_chart': None,
+        'temperature_chart': None,
+        'outdoor/humidity_chart': None,
+        'outdoor/temperature_chart': None,
     },
     'air_quality': {
         'CO2': None,
         'PM25': None,
         'TVOC': None,
-        'CH2O': None
-    },
-    # 'actuator': {
-    #     'air cleaner': None,
-    #     'air condition/display': None,
-    #     'air condition/dry/heat': None,
-    #     'air condition/health': None,
-    #     'air condition/light': None,
-    #     'air condition/mode': None,
-    #     'air condition/sleep': None,
-    #     'air condition/sleep time': None,
-    #     'air condition/super': None,
-    #     'air condition/sweep': None,
-    #     'air condition/temperature': None,
-    #     'air condition/wind': None,
-    #     'air condition/switch': None
-    # }
-    'chart': {
-        'humidity_chart': None,
-        'temperature_chart': None,
-        'outdoor/humidity_chart': None,
-        'outdoor/temperature_chart': None,
+        'CH2O': None,
         'CO2_chart': None,
         'PM25_chart': None,
         'TVOC_chart': None,
@@ -80,10 +104,13 @@ topic_dict = {
 #                 topic_dict[temp_item][msg.topic] = msg.payload.decode('utf-8')
 
 
-def stupid_code_one(msg):
+def stupid_code_one(msg, average=None):
     for temp_item, temp_value in topic_dict.items():  # 这个地方很蠢
         if msg.topic in temp_value.keys():
-            topic_dict[temp_item][msg.topic] = msg.payload.decode('utf-8')
+            if average:
+                topic_dict[temp_item][msg.topic] = round(average, 2)
+            else:
+                topic_dict[temp_item][msg.topic] = msg.payload.decode('utf-8')
 
 
 def on_message(client, userdata, msg):
@@ -97,7 +124,7 @@ def on_message(client, userdata, msg):
 
                 # mqttpub.single(msg.topic, round(temp, 2), hostname=extranet_ip)
                 # test_part(msg)
-                stupid_code_one(msg)
+                stupid_code_one(msg, average=temp)  # !!!!!!!!!!!!!!!!!!!!! problem !!!!!!!!!!
 
                 double_data[msg.topic]['sign'] = False
             else:
@@ -150,6 +177,16 @@ def on_message(client, userdata, msg):
     # !!!!!!!!!!!!!!!!!!!!!!!!! 暂时注释........!!!!!!!!!!!......
     # elif msg.topic == 'air condition/init':
     #     mqttpub.single(msg.topic, msg.payload, hostname=extranet_ip)  # 将初始化转发
+
+
+# def on_message1(client, userdata, msg):
+#     print('receive: {}{:->20s}'.format(msg.topic, str(msg.payload)))
+#     text = msg.payload.decode('utf-8')
+#     if msg.topic in topic_list:
+#         if msg.topic in double_data.keys():
+#             double_data[msg.topic]['deque'].append(float(text))
+#             if double_data[msg.topic]['sign']:
+#                 temp = sum(double_data[msg.topic]['deque']) / len(double_data[msg.topic]['deque'])
 
 
 # @atexit.register  # 这个函数会执行在捕获KeyboardInterrupt之后

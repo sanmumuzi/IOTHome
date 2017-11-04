@@ -41,5 +41,9 @@ def search_data(topic_list, collection_name, topic_dict):
                 start_date += datetime.timedelta(hours=1)
             # print('hello, fuck you!')
             # mqttpub.single(topic_name + '_chart', json.dumps(data_list), hostname=pi_intranet_ip)
-            topic_dict['chart'][topic_name + '_chart'] = data_list
+            # topic_dict['chart'][topic_name + '_chart'] = data_list
+            topic_name += '_chart'
+            for i in topic_dict.values():
+                if topic_name in i:
+                    i[topic_name] = data_list
         time.sleep(60)
