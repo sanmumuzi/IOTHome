@@ -8,6 +8,14 @@ r = requests.get('http://localhost:5001/api/v1.0/sensor_data')
 temp_data = json.loads(r.text)
 
 
+# def get_api():
+#     try:
+#         r = requests.get('http://localhost:5001/api/v1.0/sensor_data')
+#     except ConnectionError:
+#         return None
+#     return json.loads(r.text)
+
+
 @main.route('/')
 def index():
     return redirect(url_for('main.temperature_and_humidity'))
@@ -19,6 +27,8 @@ def data_item(data_name):
         # return jsonify(topic_dict[data_name])
         # r = requests.get('http://120.25.242.228:29040')
         # temp_data = json.loads(r.text)
+
+        # temp_data = get_api()
         return jsonify(temp_data[data_name])
     except KeyError:
         return render_template('404.html'), 404
