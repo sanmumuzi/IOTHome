@@ -116,7 +116,7 @@ $(document).ready(function(){
 
 
     function show(){
-        $.getJSON("http://localhost:5001/api/v1.0/sensor_data", function(data){
+        $.getJSON("http://120.25.242.228:29040/api/v1.0/sensor_data", function(data){
             var data = data['TemAndHum'];
             if (data['temperature_chart'] != null) {
                 options_temperature.series[0].data = data['temperature_chart'];
@@ -244,6 +244,7 @@ $(document).ready(function(){
                 var chart_outdoor_humidity = new Highcharts.Chart(options_outdoor_humidity);
             }
         });
+    }
 
     // function show(){
     //     $.getJSON("/data/chart/temperature", function(data){
