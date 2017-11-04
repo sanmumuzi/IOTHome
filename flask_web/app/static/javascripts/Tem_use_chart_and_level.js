@@ -116,7 +116,7 @@ $(document).ready(function(){
 
 
     function show(){
-        $.getJSON("http://120.25.242.228:29040/api/v1.0/sensor_data", function(data){
+        $.getJSON("http://120.25.242.228:29040/api/v1.0/sensor_data?callback=callback", function(data){
             var data = data['TemAndHum'];
             if (data['temperature_chart'] != null) {
                 options_temperature.series[0].data = data['temperature_chart'];
