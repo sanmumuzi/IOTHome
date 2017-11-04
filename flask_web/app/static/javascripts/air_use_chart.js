@@ -115,45 +115,40 @@ $(document).ready(function(){
     setInterval(show, 90000);
 
     function show(){
-        $.getJSON("/data/chart/PM25", function(data){
-            if (data != null) {
-                options_PM25.series[0].data = data;
+        $.getJSON("http://120.25.242.228:29040/api/v1.0/sensor_data", function(data){
+            var data = data['air_quality'];
+            if (data['PM25_chart'] != null) {
+                options_PM25.series[0].data = data['PM25_chart'];
                 var i;
                 for(i=0; i<24; i++){
-                    options_PM25.xAxis.categories[i] = data[i][0].substring(6,11);
+                    options_PM25.xAxis.categories[i] = data['PM25_chart'][i][0].substring(6,11);
                 }
                 var chart_PM25 = new Highcharts.Chart(options_PM25);
             }
-        });
 
-        $.getJSON("/data/chart/CO2", function(data){
-            if (data != null) {
-                options_CO2.series[0].data = data;
+            if (data['CO2_chart'] != null) {
+                options_CO2.series[0].data = data['CO2_chart'];
                 var i;
                 for(i=0; i<24; i++){
-                    options_CO2.xAxis.categories[i] = data[i][0].substring(6,11);
+                    options_CO2.xAxis.categories[i] = data['CO2_chart'][i][0].substring(6,11);
                 }
                 var chart_CO2 = new Highcharts.Chart(options_CO2);
             }
-        });
 
-        $.getJSON("/data/chart/TVOC", function(data){
-            if (data != null) {
-                options_TVOC.series[0].data = data;
+            if (data['TVOC_chart'] != null) {
+                options_TVOC.series[0].data = data['TVOC_chart'];
                 var i;
                 for(i=0; i<24; i++){
-                    options_TVOC.xAxis.categories[i] = data[i][0].substring(6,11);
+                    options_TVOC.xAxis.categories[i] = data['TVOC_chart'][i][0].substring(6,11);
                 }
                 var chart_TVOC = new Highcharts.Chart(options_TVOC);
             }
-        });
 
-        $.getJSON("/data/chart/CH2O", function(data){
-            if (data != null) {
-                options_CH2O.series[0].data = data;
+            if (data['CH2O_chart'] != null) {
+                options_CH2O.series[0].data = data['CH2O_chart'];
                 var i;
                 for(i=0; i<24; i++){
-                    options_CH2O.xAxis.categories[i] = data[i][0].substring(6,11);
+                    options_CH2O.xAxis.categories[i] = data['CH2O_chart'][i][0].substring(6,11);
                 }
                 var chart_CH2O = new Highcharts.Chart(options_CH2O);
             }
