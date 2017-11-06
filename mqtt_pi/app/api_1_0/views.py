@@ -18,7 +18,7 @@ def get_data_test():
     return response
 
 
-@api.route('/sensor_data_for_android/<topic>')
+@api.route('/sensor_data_for_android/<path:topic>')
 def api_for_android(topic):
     for x in topic_dict_for_android:
         if topic in topic_dict_for_android[x]:
