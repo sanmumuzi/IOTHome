@@ -22,7 +22,11 @@ def get_data_test():
 def api_for_android(topic):
     for x in topic_dict_for_android:
         if topic in topic_dict_for_android[x]:
-            response = make_response(jsonify(topic_dict_for_android[x][topic]))
+            dict_for_android = {
+                topic: topic_dict_for_android[x][topic],
+                topic + '_chart': topic_dict_for_android[x][topic + '_chart']
+            }
+            response = make_response(jsonify(dict_for_android))
             response.headers['Access-Control-Allow-Origin'] = '*'  # for ajax...
             response.headers['Access-Control-Allow-Methods'] = 'POST'
             response.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
