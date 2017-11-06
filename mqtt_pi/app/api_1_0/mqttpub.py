@@ -117,6 +117,17 @@ topic_dict_for_android = {
     },
 }
 
+# api_for_android_humidity = {
+#     'humidity': topic_dict_for_android['TemAndHum']['humidity'],
+#     'humidity_chart': None
+# }
+#
+# api_for_android_temperature = {
+#     'temperature': None
+#     'temperature'
+# }
+
+
 
 # def test_part(msg):
 #     for temp_item, temp_value in topic_dict.items():  # 这个地方很蠢

@@ -42,3 +42,4 @@ def get_token():
 # def before_request():
 #     if not g.current_user.confirmed:
 #         return forbidden('Unconfirmed account')
+

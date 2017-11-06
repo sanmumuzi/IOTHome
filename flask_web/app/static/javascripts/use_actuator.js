@@ -228,7 +228,7 @@ var func_air_dry_and_heat_off = function(){
 }
 
 var func_air_display_set = function(){
-    $('#air_display_text').text('开启');
+    $('#air_display_text').text('设定温度');
     $.post("/auth/use_actuator", {
         'topic': 'air condition/display',
         'parameter': 'set'});
