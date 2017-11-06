@@ -147,8 +147,8 @@ $(document).ready(function(){
                     else
                         $('#temperature_level').text('极热，会出人命了');
                 else
-                    alert('winter');
-                    alert(temperature);
+                    // alert('winter');
+                    // alert(temperature);
                     if (temperature <= 4)
                         $('#temperature_level').text('很冷，极不适应');
                     else if (temperature <= 8)
