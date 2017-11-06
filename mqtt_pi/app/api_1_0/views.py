@@ -21,7 +21,7 @@ def get_data_test():
 @api.route('/sensor_data_for_android/<topic>')
 def api_for_android(topic):
     for x in topic_dict_for_android:
-        if topic in x:
+        if topic in topic_dict_for_android[x]:
             response = make_response(jsonify(topic_dict_for_android[x][topic]))
             response.headers['Access-Control-Allow-Origin'] = '*'  # for ajax...
             response.headers['Access-Control-Allow-Methods'] = 'POST'
