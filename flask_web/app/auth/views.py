@@ -40,6 +40,7 @@ def test_post():
     print(request.form.get('topic'))
     print(request.form.get('parameter'))
     print('---------------------------------------')
+
     if request.form.get('topic') in actuator_num_list:
         actuator_dict[request.form.get('topic')] = request.form.get('parameter')
     else:
