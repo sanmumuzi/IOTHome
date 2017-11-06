@@ -4,46 +4,46 @@ import threading
 from collections import deque
 
 print('------------------------start mqttsub.py--------------------------------')
-topic_dict = {
-    'TemAndHum': {
-        'humidity': None,
-        'temperature': None,
-        'outdoor/humidity': None,
-        'outdoor/temperature': None,
-        'weather': None
-    },
-    'air_quality': {
-        'CO2': None,
-        'PM25': None,
-        'TVOC': None,
-        'CH2O': None
-    },
-    # 'actuator': {
-    #     'air cleaner': None,
-    #     'air condition/display': None,
-    #     'air condition/dry/heat': None,
-    #     'air condition/health': None,
-    #     'air condition/light': None,
-    #     'air condition/mode': None,
-    #     'air condition/sleep': None,
-    #     'air condition/sleep time': None,
-    #     'air condition/super': None,
-    #     'air condition/sweep': None,
-    #     'air condition/temperature': None,
-    #     'air condition/wind': None,
-    #     'air condition/switch': None
-    # }
-    'chart': {
-        'humidity_chart': None,
-        'temperature_chart': None,
-        'outdoor/humidity_chart': None,
-        'outdoor/temperature_chart': None,
-        'CO2_chart': None,
-        'PM25_chart': None,
-        'TVOC_chart': None,
-        'CH2O_chart': None
-    },
-}
+# topic_dict = {
+#     'TemAndHum': {
+#         'humidity': None,
+#         'temperature': None,
+#         'outdoor/humidity': None,
+#         'outdoor/temperature': None,
+#         'weather': None
+#     },
+#     'air_quality': {
+#         'CO2': None,
+#         'PM25': None,
+#         'TVOC': None,
+#         'CH2O': None
+#     },
+#     # 'actuator': {
+#     #     'air cleaner': None,
+#     #     'air condition/display': None,
+#     #     'air condition/dry/heat': None,
+#     #     'air condition/health': None,
+#     #     'air condition/light': None,
+#     #     'air condition/mode': None,
+#     #     'air condition/sleep': None,
+#     #     'air condition/sleep time': None,
+#     #     'air condition/super': None,
+#     #     'air condition/sweep': None,
+#     #     'air condition/temperature': None,
+#     #     'air condition/wind': None,
+#     #     'air condition/switch': None
+#     # }
+#     'chart': {
+#         'humidity_chart': None,
+#         'temperature_chart': None,
+#         'outdoor/humidity_chart': None,
+#         'outdoor/temperature_chart': None,
+#         'CO2_chart': None,
+#         'PM25_chart': None,
+#         'TVOC_chart': None,
+#         'CH2O_chart': None
+#     },
+# }
 
 actuator_dict = {
     'air cleaner': '关闭',
@@ -121,34 +121,34 @@ def init_actuator():
     actuator_dict['air condition/switch'] = '关闭'
 
 
-def on_connect(client, userdata, flag, rc):
-    print('Connected with result code ' + str(rc))
-    client.subscribe('air condition/init')
-    for topic_value in topic_dict.values():
-        for topic in topic_value.keys():
-            client.subscribe(topic)
-
-
-def on_message(client, userdata, msg):
-    # text = msg.payload.decode('utf-8')
-    for temp_item, temp_value in topic_dict.items():  # 这个地方很蠢
-        if msg.topic in temp_value.keys():
-            if msg.topic in topic_dict['chart'].keys():  # 贼蠢
-                topic_dict[temp_item][msg.topic] = msg.payload
-            else:
-                print(msg.topic + ":" + str(msg.payload))
-                topic_dict[temp_item][msg.topic] = msg.payload.decode('utf-8')
-    if msg.topic == 'air condition/init':
-        if msg.payload.decode('utf-8') == 'run':
-            print('------------------------')
-            init_actuator()
-
-
-client = mqttcli.Client()  # 打开MQTT服务器
-client.on_connect = on_connect
-client.on_message = on_message
-
-client.connect('120.25.242.228', 1883, 60)
-t = threading.Thread(target=client.loop_forever)
-t.setDaemon(True)
-t.start()
+# def on_connect(client, userdata, flag, rc):
+#     print('Connected with result code ' + str(rc))
+#     client.subscribe('air condition/init')
+#     for topic_value in topic_dict.values():
+#         for topic in topic_value.keys():
+#             client.subscribe(topic)
+#
+#
+# def on_message(client, userdata, msg):
+#     # text = msg.payload.decode('utf-8')
+#     for temp_item, temp_value in topic_dict.items():  # 这个地方很蠢
+#         if msg.topic in temp_value.keys():
+#             if msg.topic in topic_dict['chart'].keys():  # 贼蠢
+#                 topic_dict[temp_item][msg.topic] = msg.payload
+#             else:
+#                 print(msg.topic + ":" + str(msg.payload))
+#                 topic_dict[temp_item][msg.topic] = msg.payload.decode('utf-8')
+#     if msg.topic == 'air condition/init':
+#         if msg.payload.decode('utf-8') == 'run':
+#             print('------------------------')
+#             init_actuator()
+#
+#
+# client = mqttcli.Client()  # 打开MQTT服务器
+# client.on_connect = on_connect
+# client.on_message = on_message
+#
+# client.connect('120.25.242.228', 1883, 60)
+# t = threading.Thread(target=client.loop_forever)
+# t.setDaemon(True)
+# t.start()

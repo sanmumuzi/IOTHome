@@ -6,10 +6,11 @@ import paho.mqtt.publish as mqttpub
 # import json
 
 
-def search_data(topic_list, collection_name, topic_dict):
+def search_data(topic_list, collection_name, topic_dict, topic_dict_for_android):
     while True:
         for topic_name in topic_list:
             data_list = []
+            data_list_for_android = []
             now = datetime.datetime.now()
             thirty_minutes_date = now - datetime.timedelta(minutes=30)
 
@@ -37,13 +38,18 @@ def search_data(topic_list, collection_name, topic_dict):
                 except ZeroDivisionError:
                     data_avg = 0
                 data_list.append([(start_date + datetime.timedelta(minutes=30)).strftime('%m-%d %H:%M'), data_avg])
+                data_list_for_android.append({
+                    'time': (start_date + datetime.timedelta(minutes=30)).strftime('%m-%d %H:%M'),
+                    'data': data_avg
+                })
                 # print(data_avg)
                 start_date += datetime.timedelta(hours=1)
             # print('hello, fuck you!')
             # mqttpub.single(topic_name + '_chart', json.dumps(data_list), hostname=pi_intranet_ip)
             # topic_dict['chart'][topic_name + '_chart'] = data_list
             topic_name += '_chart'
-            for i in topic_dict.values():
-                if topic_name in i:
-                    i[topic_name] = data_list
+            for i in topic_dict.keys():
+                if topic_name in topic_dict[i]:
+                    topic_dict[i][topic_name] = data_list
+                    topic_dict_for_android[i][topic_name] = data_list_for_android
         time.sleep(60)

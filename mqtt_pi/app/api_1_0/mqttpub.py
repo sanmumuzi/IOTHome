@@ -93,6 +93,30 @@ topic_dict = {
     },
 }
 
+topic_dict_for_android = {
+    'TemAndHum': {
+        'humidity': None,
+        'temperature': None,
+        'outdoor/humidity': None,
+        'outdoor/temperature': None,
+        'weather': None,  # rain
+        'humidity_chart': None,
+        'temperature_chart': None,
+        'outdoor/humidity_chart': None,
+        'outdoor/temperature_chart': None,
+    },
+    'air_quality': {
+        'CO2': None,
+        'PM25': None,
+        'TVOC': None,
+        'CH2O': None,
+        'CO2_chart': None,
+        'PM25_chart': None,
+        'TVOC_chart': None,
+        'CH2O_chart': None
+    },
+}
+
 
 # def test_part(msg):
 #     for temp_item, temp_value in topic_dict.items():  # 这个地方很蠢
@@ -108,9 +132,12 @@ def stupid_code_one(msg, average=None):
     for temp_item, temp_value in topic_dict.items():  # 这个地方很蠢
         if msg.topic in temp_value.keys():
             if average:
-                topic_dict[temp_item][msg.topic] = round(average, 2)
+                temp_num = round(average, 2)  # we should except error.
+                topic_dict[temp_item][msg.topic] = temp_num
+                topic_dict_for_android[temp_item][msg.topic] = temp_num
             else:
                 topic_dict[temp_item][msg.topic] = msg.payload.decode('utf-8')
+                topic_dict_for_android[temp_item][msg.topic] = msg.payload.decode('utf-8')
 
 
 def on_message(client, userdata, msg):
@@ -240,7 +267,8 @@ x.start()
 # t.start()
 
 # 当我们将运算交给树莓派，一个更愚蠢的问题出现了，发送端将发送所有数据，即使当前只有一个页面接受访问
-data_ajax_chart_thread = threading.Thread(target=search_data, args=(tuple(chart_topic_dict.keys()), collection, topic_dict))
+data_ajax_chart_thread = threading.Thread(target=search_data, args=(tuple(chart_topic_dict.keys()), collection,
+                                                                    topic_dict, topic_dict_for_android))
 data_ajax_chart_thread.setDaemon(True)
 data_ajax_chart_thread.start()
 

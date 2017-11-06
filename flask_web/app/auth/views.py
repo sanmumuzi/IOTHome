@@ -44,8 +44,8 @@ def test_post():
         actuator_dict[request.form.get('topic')] = request.form.get('parameter')
     else:
         actuator_dict[request.form.get('topic')] = Conversion_table[request.form.get('parameter')]
-    mqttpub.single(request.form.get('topic'), request.form.get('parameter'), hostname='120.25.242.228')
-    return 'send success'
+    mqttpub.single(request.form.get('topic'), request.form.get('parameter'), hostname='localhost')
+    return 'success'
 
 
 @auth.route('/actuator_data', methods=['GET'])

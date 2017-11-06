@@ -18,6 +18,15 @@ def get_data_test():
     return response
 
 
+@api.route('/sensor_data_for_android')
+def api_for_android():
+    response = make_response(jsonify(topic_dict))
+    response.headers['Access-Control-Allow-Origin'] = '*'  # for ajax...
+    response.headers['Access-Control-Allow-Methods'] = 'POST'
+    response.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
+    return response
+
+
 @api.route('/use_actuator', methods=['POST'])
 @auth.login_required
 def send_operating():

@@ -21,31 +21,31 @@ def index():
     return redirect(url_for('main.temperature_and_humidity'))
 
 
-@main.route('/data/<data_name>')
-def data_item(data_name):
-    try:
-        # return jsonify(topic_dict[data_name])
-        # r = requests.get('http://120.25.242.228:29040')
-        # temp_data = json.loads(r.text)
-
-        # temp_data = get_api()
-        return jsonify(temp_data[data_name])
-    except KeyError:
-        return render_template('404.html'), 404
-
-
-@main.route('/data/chart/<topic_name>')
-def date_chart_item(topic_name):
-    topic_name = topic_name.replace('_', '/') + '_chart'
-    # r = requests.get('http://120.25.242.228:29040')
-    # temp_data = json.loads(r.text)
-
-    if topic_name in temp_data['chart'].keys():
-        try:
-            return jsonify(temp_data['chart'][topic_name])
-        except TypeError:
-            return jsonify(None)
-    return render_template('404.html'), 404
+# @main.route('/data/<data_name>')
+# def data_item(data_name):
+#     try:
+#         # return jsonify(topic_dict[data_name])
+#         # r = requests.get('http://120.25.242.228:29040')
+#         # temp_data = json.loads(r.text)
+#
+#         # temp_data = get_api()
+#         return jsonify(temp_data[data_name])
+#     except KeyError:
+#         return render_template('404.html'), 404
+#
+#
+# @main.route('/data/chart/<topic_name>')
+# def date_chart_item(topic_name):
+#     topic_name = topic_name.replace('_', '/') + '_chart'
+#     # r = requests.get('http://120.25.242.228:29040')
+#     # temp_data = json.loads(r.text)
+#
+#     if topic_name in temp_data['chart'].keys():
+#         try:
+#             return jsonify(temp_data['chart'][topic_name])
+#         except TypeError:
+#             return jsonify(None)
+#     return render_template('404.html'), 404
 
 
 @main.route('/temperature_and_humidity')
