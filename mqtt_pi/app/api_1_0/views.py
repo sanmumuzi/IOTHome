@@ -1,7 +1,7 @@
 from flask import jsonify, request, g, url_for, current_app, make_response
 from .. import db
 from .import api
-from .mqttpub import topic_dict
+from .mqttpub import topic_dict, topic_dict_for_android
 from .authentication import auth
 import paho.mqtt.publish as mqttpub
 
@@ -20,7 +20,7 @@ def get_data_test():
 
 @api.route('/sensor_data_for_android')
 def api_for_android():
-    response = make_response(jsonify(topic_dict))
+    response = make_response(jsonify(topic_dict_for_android))
     response.headers['Access-Control-Allow-Origin'] = '*'  # for ajax...
     response.headers['Access-Control-Allow-Methods'] = 'POST'
     response.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
