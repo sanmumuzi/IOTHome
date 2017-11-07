@@ -23,7 +23,7 @@ def api_for_android(topic):
     for x in topic_dict_for_android:
         if topic in topic_dict_for_android[x]:
             dict_for_android = {
-                topic: topic_dict_for_android[x][topic],
+                topic: float(topic_dict_for_android[x][topic]),
                 topic + '_chart': topic_dict_for_android[x][topic + '_chart']
             }
             response = make_response(jsonify(dict_for_android))
