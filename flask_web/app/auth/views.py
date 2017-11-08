@@ -49,7 +49,7 @@ def test_post():
     return 'success'
 
 
-# @auth.route('/actuator_data', methods=['GET'])
-# @login_required
-# def get_actuator():
-#     return jsonify(actuator_dict)
+@auth.route('/actuator_data', methods=['GET'])
+@login_required
+def get_actuator():
+    return jsonify(actuator_dict)
