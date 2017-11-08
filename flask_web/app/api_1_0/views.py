@@ -41,10 +41,10 @@ def send_operating():
     content = request.get_json(force=True)  # Automatically convert to dict...
     # print(content)
     print(type(content))
-    if request.form.get('topic') in actuator_num_list:
-        actuator_dict[request.form.get('topic')] = request.form.get('parameter')
+    if content['topic'] in actuator_num_list:
+        actuator_dict[content['topic']] = content['parameter']
     else:
-        actuator_dict[request.form.get('topic')] = Conversion_table[request.form.get('parameter')]
+        actuator_dict[content['topic']] = Conversion_table[content['parameter']]
     mqttpub.single(content['topic'], content['parameter'])
     # print(json.loads(str(content)))
     return jsonify('success')
