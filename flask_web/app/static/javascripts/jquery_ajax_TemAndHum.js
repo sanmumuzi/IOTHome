@@ -21,7 +21,7 @@ $(document).ready(function(){
 	// }
 
 	function show_TemAndHum(){
-		$.getJSON("http://120.25.242.228:29040/api/v1.0/sensor_data", function(data){
+		$.getJSON("http://120.25.242.22/api/v1.0/sensor_data", function(data){
 			var data = data['TemAndHum'];
 			$('#humidity').text(data['humidity']);
 			$('#temperature').text(data['temperature']);

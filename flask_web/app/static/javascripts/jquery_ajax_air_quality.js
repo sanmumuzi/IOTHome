@@ -12,7 +12,7 @@ $(document).ready(function(){
     // }
 
     function show_air_quality(){
-        $.getJSON("http://120.25.242.228:29040/api/v1.0/sensor_data", function(data){
+        $.getJSON("http://120.25.242.228/api/v1.0/sensor_data", function(data){
             var data = data['air_quality'];
             $('#PM25').text(data['PM25']);
             $('#CO2').text(data.CO2);
