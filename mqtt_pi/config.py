@@ -5,7 +5,7 @@ basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 class Config(object):
     SECRET_KEY = os.environ.get("SECRET_KEY") or "hardtoguessstring"
-    MONGO_DBNAME = 'data_test_1'
+    MONGO_DBNAME = 'data_test'
 
     @staticmethod
     def init_app(app):

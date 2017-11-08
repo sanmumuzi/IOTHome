@@ -1,12 +1,11 @@
 import os
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-print(basedir)
 
 
 class Config(object):
     SECRET_KEY = os.environ.get("SECRET_KEY") or "hardtoguessstring"
-    MONGO2_DBNAME = 'data_lei'
+    MONGO2_DBNAME = 'data_test'
 
     @staticmethod
     def init_app(app):
