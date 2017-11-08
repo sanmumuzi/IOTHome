@@ -39,8 +39,8 @@ def api_for_android(topic):
 def send_operating():
     # mqttpub.single(request.form.get('topic'), request.form.get('parameter'))
     content = request.get_json(force=True)  # Automatically convert to dict...
-    # print(content)
-    print(type(content))
+    print(content)
+    # print(type(content))
     if content['topic'] in actuator_num_list:
         actuator_dict[content['topic']] = content['parameter']
     else:
