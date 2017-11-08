@@ -38,13 +38,13 @@ def api_for_android(topic):
 @auth.login_required
 def send_operating():
     # mqttpub.single(request.form.get('topic'), request.form.get('parameter'))
-    content = request.get_json(force=True)
-    print(content)
+    content = request.get_json(force=True)  # Automatically convert to dict...
+    # print(content)
     print(type(content))
-    # if request.form.get('topic') in actuator_num_list:
-    #     actuator_dict[request.form.get('topic')] = request.form.get('parameter')
-    # else:
-    #     actuator_dict[request.form.get('topic')] = Conversion_table[request.form.get('parameter')]
+    if request.form.get('topic') in actuator_num_list:
+        actuator_dict[request.form.get('topic')] = request.form.get('parameter')
+    else:
+        actuator_dict[request.form.get('topic')] = Conversion_table[request.form.get('parameter')]
     mqttpub.single(content['topic'], content['parameter'])
     # print(json.loads(str(content)))
     return jsonify('success')
