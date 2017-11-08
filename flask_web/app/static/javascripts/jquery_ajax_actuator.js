@@ -1,6 +1,6 @@
 $(document).ready(function(){
     show_actuator();
-    // setInterval(show_actuator, 5000);
+    setInterval(show_actuator, 5000);
 
     function show_actuator(){
         $.getJSON("/auth/actuator_data", function(data){
