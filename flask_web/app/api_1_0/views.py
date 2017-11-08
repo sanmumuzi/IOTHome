@@ -50,3 +50,7 @@ def send_operating():
     return jsonify('success')
 
 
+@api.route('/get_actuator')
+@auth.login_required
+def get_actuator_message():
+    return jsonify(actuator_dict)
