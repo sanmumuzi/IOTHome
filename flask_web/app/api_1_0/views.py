@@ -4,7 +4,7 @@ from .import api
 from .mqttpub import topic_dict, topic_dict_for_android
 from .authentication import auth
 import paho.mqtt.publish as mqttpub
-
+from ..main.mqttsub import actuator_dict, Conversion_table, actuator_num_list
 
 # actuator_num_list = ['air condition/sleep time', 'air condition/temperature']
 
@@ -39,15 +39,14 @@ def api_for_android(topic):
 def send_operating():
     # mqttpub.single(request.form.get('topic'), request.form.get('parameter'))
     content = request.get_json(force=True)
+    print(content)
+    print(type(content))
+    # if request.form.get('topic') in actuator_num_list:
+    #     actuator_dict[request.form.get('topic')] = request.form.get('parameter')
+    # else:
+    #     actuator_dict[request.form.get('topic')] = Conversion_table[request.form.get('parameter')]
     mqttpub.single(content['topic'], content['parameter'])
     # print(json.loads(str(content)))
     return jsonify('success')
 
-
-
-
-
-
-# @api.route('/actuator_data')
-# def get_actuator_data():
 
