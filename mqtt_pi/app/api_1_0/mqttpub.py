@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
-import paho.mqtt.client as mqttcli
-import paho.mqtt.publish as mqttpub
-from pymongo import MongoClient
-import atexit
 import threading
+from queue import Queue
+
+import paho.mqtt.client as mqttcli
+from pymongo import MongoClient
+
 from .config_pi import *
 from .use_mongodb import search_data
-from queue import Queue
-import datetime
 
-temp_bool = False
+temp_sign = False
 q = Queue()
-q.put(temp_bool)
+q.put(temp_sign)
 
-mongo_client = MongoClient(host=host, port=port)
+mongo_client = MongoClient(host=host, port=port)  # use mongodb
 db = mongo_client[db_name]
 collection = db[collection_name]
 
@@ -24,8 +23,6 @@ def on_connect(client, userdata, flag, rc):
     client.subscribe('air condition/init')  # 订阅初始化topic
     for topic in topic_list:
         client.subscribe(topic)
-
-    # GPIO.output(led_1, True)
 
 
 # topic_dict = {
@@ -93,6 +90,13 @@ topic_dict = {
     },
 }
 
+reverse_topic_dict = {}  # reverse map the topic.
+
+for temp_key, temp_value in topic_dict.items():
+    for temp_sub_key in temp_value:
+        reverse_topic_dict[temp_sub_key] = temp_key
+
+
 topic_dict_for_android = {
     'TemAndHum': {
         'humidity': None,
@@ -117,27 +121,6 @@ topic_dict_for_android = {
     },
 }
 
-# api_for_android_humidity = {
-#     'humidity': topic_dict_for_android['TemAndHum']['humidity'],
-#     'humidity_chart': None
-# }
-#
-# api_for_android_temperature = {
-#     'temperature': None
-#     'temperature'
-# }
-
-
-
-# def test_part(msg):
-#     for temp_item, temp_value in topic_dict.items():  # 这个地方很蠢
-#         if msg.topic in temp_value.keys():
-#             if msg.topic in topic_dict['chart'].keys():  # 贼蠢
-#                 topic_dict[temp_item][msg.topic] = msg.payload
-#             else:
-#                 print(msg.topic + ":" + str(msg.payload))
-#                 topic_dict[temp_item][msg.topic] = msg.payload.decode('utf-8')
-
 
 def stupid_code_one(msg, average=None):
     for temp_item, temp_value in topic_dict.items():  # 这个地方很蠢
@@ -151,70 +134,126 @@ def stupid_code_one(msg, average=None):
                 topic_dict_for_android[temp_item][msg.topic] = msg.payload.decode('utf-8')
 
 
-def on_message(client, userdata, msg):
+# def on_message(client, userdata, msg):
+#     print('receive: {}{:->20s}'.format(msg.topic, str(msg.payload)))
+#     text = msg.payload.decode('utf-8')
+#     if msg.topic in topic_list:
+#         if msg.topic in double_data.keys():
+#             double_data[msg.topic]['deque'].append(float(text))
+#             if double_data[msg.topic]['sign']:
+#                 temp = sum(double_data[msg.topic]['deque']) / len(double_data[msg.topic]['deque'])
+#
+#                 # mqttpub.single(msg.topic, round(temp, 2), hostname=extranet_ip)
+#                 # test_part(msg)
+#                 stupid_code_one(msg, average=temp)  # !!!!!!!!!!!!!!!!!!!!! problem !!!!!!!!!!
+#
+#                 double_data[msg.topic]['sign'] = False
+#             else:
+#                 double_data[msg.topic]['sign'] = True
+#         else:
+#             stupid_code_one(msg)
+#
+#             # test_part(msg)
+#             # mqttpub.single(msg.topic, msg.payload, hostname=extranet_ip)
+#
+#         if msg.topic == 'weather':  # weather already solve before.
+#             pass
+#         else:
+#             chart_topic_dict[msg.topic].data_sum += float(text)
+#             chart_topic_dict[msg.topic].data_num += 1
+#             chart_topic_dict[msg.topic].date_sum += time.time()
+#             temp_sign = q.get()
+#             if temp_sign:
+#                 for temp_single_data in chart_topic_dict.keys():
+#                     try:
+#                         temp_avg_value = round(
+#                             chart_topic_dict[temp_single_data].data_sum / chart_topic_dict[temp_single_data].data_num, 2)
+#                         temp_avg_time = chart_topic_dict[temp_single_data].date_sum / chart_topic_dict[
+#                             temp_single_data].data_num
+#                     except ZeroDivisionError:  # 貌似因为Queue的关系,不可能出现这个Error.......
+#                         temp_avg_value = 0
+#                         temp_avg_time = time.time() - 300  # ..算是瞎写,个人认为.不会执行这个东西
+#                     data_save = {
+#                         'topic': temp_single_data,
+#                         'data': temp_avg_value,
+#                         'timestamp': temp_avg_time
+#                     }
+#                     chart_topic_dict[temp_single_data].data_sum = 0
+#                     chart_topic_dict[temp_single_data].data_num = 0
+#                     chart_topic_dict[temp_single_data].date_sum = 0
+#
+#                     print('save data to mongodb: ', data_save)
+#
+#                     collection.insert(data_save)
+#
+#                 temp_sign = False
+#                 q.put(temp_sign)
+#             else:
+#                 q.put(temp_sign)  # 不可或缺，要不然就阻塞了
+#
+#         # GPIO.output(led_2, True)
+#         # global sign
+#         # sign = 0
+#     # !!!!!!!!!!!!!!!!!!!!!!!!! 暂时注释........!!!!!!!!!!!......
+#     # elif msg.topic == 'air condition/init':
+#     #     mqttpub.single(msg.topic, msg.payload, hostname=extranet_ip)  # 将初始化转发
+
+
+def modify_data_in_dict(topic, value):
+    topic_dict[reverse_topic_dict[topic]][topic] = value
+    topic_dict_for_android[reverse_topic_dict[topic]][topic] = value
+
+
+def deal_with_double_data(topic, text):
+    this_topic = double_data[topic]
+    this_topic['deque'].append(float(text))
+    if this_topic['sign']:
+        average_value = round(sum(this_topic['deque']) / len(this_topic['deque']), 2)
+        modify_data_in_dict(topic, average_value)
+        this_topic['sign'] = False
+    else:
+        this_topic['sign'] = True
+
+
+def on_message_one(client, userdata, msg):
     print('receive: {}{:->20s}'.format(msg.topic, str(msg.payload)))
     text = msg.payload.decode('utf-8')
-    if msg.topic in topic_list:
-        if msg.topic in double_data.keys():
-            double_data[msg.topic]['deque'].append(float(text))
-            if double_data[msg.topic]['sign']:
-                temp = sum(double_data[msg.topic]['deque']) / len(double_data[msg.topic]['deque'])
-
-                # mqttpub.single(msg.topic, round(temp, 2), hostname=extranet_ip)
-                # test_part(msg)
-                stupid_code_one(msg, average=temp)  # !!!!!!!!!!!!!!!!!!!!! problem !!!!!!!!!!
-
-                double_data[msg.topic]['sign'] = False
-            else:
-                double_data[msg.topic]['sign'] = True
+    if msg.topic in reverse_topic_dict:
+        if msg.topic in double_data:
+            deal_with_double_data(msg.topic, text)
         else:
-            stupid_code_one(msg)
+            modify_data_in_dict(msg.topic, text)
+        chart_topic_dict[msg.topic].data_sum += float(text)
+        chart_topic_dict[msg.topic].data_num += 1
+        chart_topic_dict[msg.topic].date_sum += time.time()
+        temp_sign = q.get()
+        if temp_sign:
+            for temp_single_data in chart_topic_dict.keys():
+                try:
+                    temp_avg_value = round(
+                        chart_topic_dict[temp_single_data].data_sum / chart_topic_dict[temp_single_data].data_num, 2)
+                    temp_avg_time = chart_topic_dict[temp_single_data].date_sum / chart_topic_dict[
+                        temp_single_data].data_num
+                except ZeroDivisionError:  # 貌似因为Queue的关系,不可能出现这个Error.......
+                    temp_avg_value = 0
+                    temp_avg_time = time.time() - 300  # ..算是瞎写,个人认为.不会执行这个东西
+                data_save = {
+                    'topic': temp_single_data,
+                    'data': temp_avg_value,
+                    'timestamp': temp_avg_time
+                }
+                chart_topic_dict[temp_single_data].data_sum = 0
+                chart_topic_dict[temp_single_data].data_num = 0
+                chart_topic_dict[temp_single_data].date_sum = 0
 
-            # test_part(msg)
-            # mqttpub.single(msg.topic, msg.payload, hostname=extranet_ip)
+                print('save data to mongodb: ', data_save)
 
-        if msg.topic == 'weather':
-            pass
+                collection.insert(data_save)
+
+            temp_sign = False
+            q.put(temp_sign)
         else:
-            chart_topic_dict[msg.topic].data_sum += float(text)
-            chart_topic_dict[msg.topic].data_num += 1
-            chart_topic_dict[msg.topic].date_sum += time.time()
-            temp_sign = q.get()
-            if temp_sign:
-                for temp_single_data in chart_topic_dict.keys():
-                    try:
-                        temp_avg_value = round(
-                            chart_topic_dict[temp_single_data].data_sum / chart_topic_dict[temp_single_data].data_num, 2)
-                        temp_avg_time = chart_topic_dict[temp_single_data].date_sum / chart_topic_dict[
-                            temp_single_data].data_num
-                    except ZeroDivisionError:  # 貌似因为Queue的关系,不可能出现这个Error.......
-                        temp_avg_value = 0
-                        temp_avg_time = time.time() - 300  # ..算是瞎写,个人认为.不会执行这个东西
-                    data_save = {
-                        'topic': temp_single_data,
-                        'data': temp_avg_value,
-                        'timestamp': temp_avg_time
-                    }
-                    chart_topic_dict[temp_single_data].data_sum = 0
-                    chart_topic_dict[temp_single_data].data_num = 0
-                    chart_topic_dict[temp_single_data].date_sum = 0
-
-                    print('save data to mongodb: ', data_save)
-                    # print(datetime.datetime.now())
-
-                    collection.insert(data_save)
-
-                temp_sign = False
-                q.put(temp_sign)
-            else:
-                q.put(temp_sign)  # 不可或缺，要不然就阻塞了
-
-        # GPIO.output(led_2, True)
-        # global sign
-        # sign = 0
-    # !!!!!!!!!!!!!!!!!!!!!!!!! 暂时注释........!!!!!!!!!!!......
-    # elif msg.topic == 'air condition/init':
-    #     mqttpub.single(msg.topic, msg.payload, hostname=extranet_ip)  # 将初始化转发
+            q.put(temp_sign)  # 不可或缺，要不然就阻塞了
 
 
 # def on_message1(client, userdata, msg):
@@ -235,10 +274,10 @@ def on_message(client, userdata, msg):
 
 client = mqttcli.Client()
 client.on_connect = on_connect
-client.on_message = on_message
+client.on_message = on_message_one
 
 
-client.connect('localhost', 1883, 60)
+client.connect('localhost', 1883, 60)  #
 x = threading.Thread(target=client.loop_forever)
 x.setDaemon(True)
 x.start()

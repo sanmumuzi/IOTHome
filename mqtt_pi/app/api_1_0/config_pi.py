@@ -1,4 +1,3 @@
-# import RPi.GPIO as GPIO
 import time
 from collections import deque
 
@@ -7,20 +6,14 @@ CO2_sign = False
 temperature_sign = False
 humidity_sign = False
 
-# led_1 = 16
-# led_2 = 21
-# led_pin = (led_1, led_2)
-# GPIO.setwarnings(False)
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setup(led_pin, GPIO.OUT)
 
-host = 'localhost'
+host = 'localhost'  # mongodb config
 port = 27017
 db_name = 'data_test'
 collection_name = 'data_item_test'
 
 
-class DataItem(object):
+class DataItem(object):  # store temporary data in memory for ten minutes.
     def __init__(self):
         self.data_sum = 0
         self.data_num = 0
@@ -30,7 +23,7 @@ class DataItem(object):
 topic_list = ['outdoor/humidity', 'weather', 'outdoor/temperature', 'humidity', 'temperature', 'TVOC', 'CH2O', 'PM25',
               'CO2']
 
-double_data = {
+double_data = {  # deal with double data
     'CO2': {
         'deque': deque(maxlen=2),
         'sign': False,
@@ -45,7 +38,7 @@ double_data = {
     }
 }
 
-chart_topic_dict = {
+chart_topic_dict = {  # store data point for chart
     'outdoor/humidity': DataItem(),
     'outdoor/temperature': DataItem(),
     'humidity': DataItem(),
@@ -61,20 +54,8 @@ actuator_list = ['air cleaner', 'air condition/display', 'air condition/dry/heat
                  'air condition/super', 'air condition/sweep', 'air condition/temperature', 'air condition/wind',
                  'air condition/switch']
 
-pi_intranet_ip = '172.24.1.1'
-extranet_ip = '120.25.242.228'
 
-
-# def led_two():
-#     while True:
-#         global sign
-#         if sign >= 2:
-#             GPIO.output(led_2, False)
-#         time.sleep(1)
-#         sign += 1
-
-
-def ten_limit(q):
+def ten_limit(q):  # modify sign per ten minutes.
     while True:
         time.sleep(600)
         temp = q.get()

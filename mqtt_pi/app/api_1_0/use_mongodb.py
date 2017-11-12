@@ -1,6 +1,6 @@
 import time
 import datetime
-from .config_pi import *
+from mqtt_pi.app.api_1_0.config_pi import *
 import paho.mqtt.publish as mqttpub
 # import pickle
 # import json
