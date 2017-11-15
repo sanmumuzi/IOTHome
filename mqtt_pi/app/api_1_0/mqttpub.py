@@ -156,7 +156,7 @@ def stupid_code_one(msg, average=None):
 #             # test_part(msg)
 #             # mqttpub.single(msg.topic, msg.payload, hostname=extranet_ip)
 #
-#         if msg.topic == 'weather':  # weather already solve before.
+#         if msg.topic == 'weather':
 #             pass
 #         else:
 #             chart_topic_dict[msg.topic].data_sum += float(text)
@@ -215,6 +215,43 @@ def deal_with_double_data(topic, text):
         this_topic['sign'] = True
 
 
+def zero_chart(topic):
+    chart_topic_dict[topic].data_sum = 0
+    chart_topic_dict[topic].data_num = 0
+    chart_topic_dict[topic].date_sum = 0
+
+
+def save_data_to_mongodb():
+    temp_sign1 = q.get()
+    if temp_sign1:
+        for temp_single_data in chart_topic_dict:
+            temp_item = chart_topic_dict[temp_single_data]
+            try:
+                temp_avg_value = round(temp_item.data_sum / temp_item.data_num, 2)
+                temp_avg_time = temp_item.date_sum / temp_item.data_num
+            except ZeroDivisionError:
+                temp_avg_value = 0
+                temp_avg_time = time.time() - 300
+            data_save = {
+                'topic': temp_single_data,
+                'data': temp_avg_value,
+                'timestamp': temp_avg_time
+            }
+            collection.insert(data_save)
+            zero_chart(temp_single_data)
+        temp_sign1 = False
+        q.put(temp_sign1)
+    else:
+        q.put(temp_sign1)  # 不可或缺，要不然就阻塞了
+
+
+def structure_chart(topic, text):
+    if topic != 'weather':
+        chart_topic_dict[topic].data_sum += float(text)
+        chart_topic_dict[topic].data_num += 1
+        chart_topic_dict[topic].date_sum += time.time()
+
+
 def on_message_one(client, userdata, msg):
     print('receive: {}{:->20s}'.format(msg.topic, str(msg.payload)))
     text = msg.payload.decode('utf-8')
@@ -223,37 +260,37 @@ def on_message_one(client, userdata, msg):
             deal_with_double_data(msg.topic, text)
         else:
             modify_data_in_dict(msg.topic, text)
-        chart_topic_dict[msg.topic].data_sum += float(text)
-        chart_topic_dict[msg.topic].data_num += 1
-        chart_topic_dict[msg.topic].date_sum += time.time()
-        temp_sign = q.get()
-        if temp_sign:
-            for temp_single_data in chart_topic_dict.keys():
-                try:
-                    temp_avg_value = round(
-                        chart_topic_dict[temp_single_data].data_sum / chart_topic_dict[temp_single_data].data_num, 2)
-                    temp_avg_time = chart_topic_dict[temp_single_data].date_sum / chart_topic_dict[
-                        temp_single_data].data_num
-                except ZeroDivisionError:  # 貌似因为Queue的关系,不可能出现这个Error.......
-                    temp_avg_value = 0
-                    temp_avg_time = time.time() - 300  # ..算是瞎写,个人认为.不会执行这个东西
-                data_save = {
-                    'topic': temp_single_data,
-                    'data': temp_avg_value,
-                    'timestamp': temp_avg_time
-                }
-                chart_topic_dict[temp_single_data].data_sum = 0
-                chart_topic_dict[temp_single_data].data_num = 0
-                chart_topic_dict[temp_single_data].date_sum = 0
+        structure_chart(msg.topic, text)
+        save_data_to_mongodb()
 
-                print('save data to mongodb: ', data_save)
-
-                collection.insert(data_save)
-
-            temp_sign = False
-            q.put(temp_sign)
-        else:
-            q.put(temp_sign)  # 不可或缺，要不然就阻塞了
+        # temp_sign = q.get()
+        # if temp_sign:
+        #     for temp_single_data in chart_topic_dict.keys():
+        #         try:
+        #             temp_avg_value = round(
+        #                 chart_topic_dict[temp_single_data].data_sum / chart_topic_dict[temp_single_data].data_num, 2)
+        #             temp_avg_time = chart_topic_dict[temp_single_data].date_sum / chart_topic_dict[
+        #                 temp_single_data].data_num
+        #         except ZeroDivisionError:  # 貌似因为Queue的关系,不可能出现这个Error.......
+        #             temp_avg_value = 0
+        #             temp_avg_time = time.time() - 300  # ..算是瞎写,个人认为.不会执行这个东西
+        #         data_save = {
+        #             'topic': temp_single_data,
+        #             'data': temp_avg_value,
+        #             'timestamp': temp_avg_time
+        #         }
+        #         chart_topic_dict[temp_single_data].data_sum = 0
+        #         chart_topic_dict[temp_single_data].data_num = 0
+        #         chart_topic_dict[temp_single_data].date_sum = 0
+        #
+        #         print('save data to mongodb: ', data_save)
+        #
+        #         collection.insert(data_save)
+        #
+        #     temp_sign = False
+        #     q.put(temp_sign)
+        # else:
+        #     q.put(temp_sign)  # 不可或缺，要不然就阻塞了
 
 
 # def on_message1(client, userdata, msg):
@@ -277,7 +314,7 @@ client.on_connect = on_connect
 client.on_message = on_message_one
 
 
-client.connect('localhost', 1883, 60)  #
+client.connect('localhost', 1883, 60)
 x = threading.Thread(target=client.loop_forever)
 x.setDaemon(True)
 x.start()
