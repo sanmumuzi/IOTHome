@@ -14,6 +14,7 @@ redis = Redis(host='localhost', port=6379, db=0)
 def get_data_test():
     # response = make_response(jsonify(topic_dict))
     response = make_response(redis.get('sensor_api').decode('utf-8'))
+    print('redis:', redis.get('sensor_api'))
     response.headers['Access-Control-Allow-Origin'] = '*'  # for ajax...
     response.headers['Access-Control-Allow-Methods'] = 'POST'
     response.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
