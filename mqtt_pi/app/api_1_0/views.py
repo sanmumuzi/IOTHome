@@ -8,6 +8,7 @@ from redis import Redis
 
 redis = Redis(host='localhost', port=6379, db=0)
 # actuator_num_list = ['air condition/sleep time', 'air condition/temperature']
+print('sadfasdfasdfasdfasd')
 
 
 @api.route('/sensor_data')
