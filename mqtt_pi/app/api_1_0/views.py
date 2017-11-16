@@ -4,14 +4,16 @@ from .import api
 from .mqttpub import topic_dict, topic_dict_for_android
 from .authentication import auth
 import paho.mqtt.publish as mqttpub
+from redis import Redis
 
-
+redis = Redis(host='localhost', port=6379, db=0)
 # actuator_num_list = ['air condition/sleep time', 'air condition/temperature']
 
 
 @api.route('/sensor_data')
 def get_data_test():
-    response = make_response(jsonify(topic_dict))
+    # response = make_response(jsonify(topic_dict))
+    response = make_response(redis.get('sensor_api').decode('utf-8'))
     response.headers['Access-Control-Allow-Origin'] = '*'  # for ajax...
     response.headers['Access-Control-Allow-Methods'] = 'POST'
     response.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
