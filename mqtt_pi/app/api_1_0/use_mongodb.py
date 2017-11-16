@@ -1,9 +1,6 @@
 import time
 import datetime
 from mqtt_pi.app.api_1_0.config_pi import *
-import paho.mqtt.publish as mqttpub
-# import pickle
-# import json
 
 
 def search_data(topic_list, collection_name, topic_dict, topic_dict_for_android):
@@ -34,7 +31,6 @@ def search_data(topic_list, collection_name, topic_dict, topic_dict_for_android)
                     sign_int += 1
                 try:
                     data_avg = sum_data / sign_int
-                    # print('hello , no Zero!')
                 except ZeroDivisionError:
                     data_avg = 0
                 data_list.append([(start_date + datetime.timedelta(minutes=30)).strftime('%m-%d %H:%M'), data_avg])
@@ -42,11 +38,7 @@ def search_data(topic_list, collection_name, topic_dict, topic_dict_for_android)
                     'time': (start_date + datetime.timedelta(minutes=30)).strftime('%m-%d %H:%M'),
                     'data': data_avg
                 })
-                # print(data_avg)
                 start_date += datetime.timedelta(hours=1)
-            # print('hello, fuck you!')
-            # mqttpub.single(topic_name + '_chart', json.dumps(data_list), hostname=pi_intranet_ip)
-            # topic_dict['chart'][topic_name + '_chart'] = data_list
             topic_name += '_chart'
             for i in topic_dict.keys():
                 if topic_name in topic_dict[i]:

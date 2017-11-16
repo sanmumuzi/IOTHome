@@ -44,10 +44,3 @@ def send_operating():
     return jsonify('success')
 
 
-
-
-
-
-# @api.route('/actuator_data')
-# def get_actuator_data():
-
