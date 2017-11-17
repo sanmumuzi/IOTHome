@@ -12,8 +12,8 @@ $(document).ready(function(){
     // }
 
     function show_air_quality(){
-        $.getJSON("http://120.25.242.228/api/v1.0/sensor_data", function(data){
-            var data = data['air_quality'];
+        $.getJSON("http://120.25.242.228/api/v1.0/sensor_data/air_quality", function(data){
+            // var data = data['air_quality'];
             $('#PM25').text(data['PM25']);
             $('#CO2').text(data.CO2);
             $('#TVOC').text(data.TVOC);

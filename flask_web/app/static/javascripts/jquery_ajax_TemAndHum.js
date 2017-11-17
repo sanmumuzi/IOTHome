@@ -21,8 +21,7 @@ $(document).ready(function(){
 	// }
 
 	function show_TemAndHum(){
-		$.getJSON("http://120.25.242.228/api/v1.0/sensor_data", function(data){
-			var data = data['TemAndHum'];
+		$.getJSON("http://120.25.242.228/api/v1.0/sensor_data/TemAndHum", function(data){
 			$('#humidity').text(data['humidity']);
 			$('#temperature').text(data['temperature']);
 			$('#outdoor-humidity').text(data['outdoor/humidity']);
@@ -38,4 +37,5 @@ $(document).ready(function(){
 		});
 	}
 });
+
 

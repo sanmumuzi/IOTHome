@@ -113,11 +113,12 @@ $(document).ready(function(){
 
     show();
     setInterval(show, 90000);
+    
 
 
     function show(){
-        $.getJSON("http://120.25.242.228/api/v1.0/sensor_data", function(data){
-            var data = data['TemAndHum'];
+        $.getJSON("http://120.25.242.228/api/v1.0/sensor_chart_data/TemAndHum", function(data){
+            // var data = data['TemAndHum'];
             if (data['temperature_chart'] != null) {
                 options_temperature.series[0].data = data['temperature_chart'];
                 var i;

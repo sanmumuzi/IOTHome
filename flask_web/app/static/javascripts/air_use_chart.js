@@ -115,8 +115,8 @@ $(document).ready(function(){
     setInterval(show, 90000);
 
     function show(){
-        $.getJSON("http://120.25.242.228/api/v1.0/sensor_data", function(data){
-            var data = data['air_quality'];
+        $.getJSON("http://120.25.242.228/api/v1.0/sensor_chart_data/air_quality", function(data){
+            // var data = data['air_quality'];
             if (data['PM25_chart'] != null) {
                 options_PM25.series[0].data = data['PM25_chart'];
                 var i;
