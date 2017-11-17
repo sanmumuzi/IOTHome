@@ -43,9 +43,9 @@ def get_test_chart_data(species):
     if species in topic_dict:
         for item in topic_dict[species]:
             if item[-6:] == '_chart':
-                temp_dict[item] = r.get(item).decode('utf-8')
+                temp_dict[item] = json.loads(r.get(item).decode('utf-8'))
         print(temp_dict)
-    return make_response(temp_dict)  # already json.
+    return make_response(jsonify(temp_dict))
 
 
 @api.route('/sensor_data_for_android/<path:topic>')

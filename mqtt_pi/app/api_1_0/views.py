@@ -45,5 +45,3 @@ def send_operating():
     mqttpub.single(content['topic'], content['parameter'])
     # print(json.loads(str(content)))
     return jsonify('success')
-
-
