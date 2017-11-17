@@ -23,7 +23,7 @@ def get_data_test():
     return response
 
 
-@api.route('/sensor_data/<species>')
+@api.route('/sensor_data/<species>')  # use redis
 def get_test_data(species):
     temp_dict = {}
     if species in topic_dict:
@@ -35,6 +35,17 @@ def get_test_data(species):
         print('this is ..')
         print(temp_dict)
     return make_response(jsonify(temp_dict))
+
+
+@api.route('/sensor_chart_data/<species>')
+def get_test_chart_data(species):
+    temp_dict = {}
+    if species in topic_dict:
+        for item in topic_dict[species]:
+            if item[-6:] == '_chart':
+                temp_dict[item] = r.get(item).decode('utf-8')
+        print(temp_dict)
+    return make_response(temp_dict)  # already json.
 
 
 @api.route('/sensor_data_for_android/<path:topic>')
