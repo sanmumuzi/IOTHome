@@ -6,6 +6,7 @@ from .authentication import auth
 import paho.mqtt.publish as mqttpub
 from ..main.mqttsub import actuator_dict, Conversion_table, actuator_num_list
 from redis import Redis
+import json
 
 
 r = Redis(host='localhost', port=6379, db=0)
@@ -20,6 +21,17 @@ def get_data_test():
     response.headers['Access-Control-Allow-Methods'] = 'POST'
     response.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
     return response
+
+
+@api.route('/sensor_data/<species>')
+def get_test_data(species):
+    temp_dict = {}
+    if species in topic_dict:
+        for item in topic_dict[species]:
+            temp_dict[item] = r.get(item)
+        print('this is ..')
+        print(temp_dict)
+    return make_response(jsonify(temp_dict))
 
 
 @api.route('/sensor_data_for_android/<path:topic>')
