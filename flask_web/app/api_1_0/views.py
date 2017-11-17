@@ -1,4 +1,4 @@
-from flask import jsonify, request, g, url_for, current_app, make_response
+from flask import jsonify, request, abort, g, url_for, current_app, make_response
 from .. import db
 from .import api
 from .mqttpub import topic_dict, topic_dict_for_android
@@ -34,6 +34,8 @@ def get_test_data(species):
                 temp_dict[item] = r.get(item).decode('utf-8')
         print('this is ..')
         print(temp_dict)
+    else:
+        abort(404)
     return make_response(jsonify(temp_dict))
 
 
@@ -45,6 +47,8 @@ def get_test_chart_data(species):
             if item[-6:] == '_chart':
                 temp_dict[item] = json.loads(r.get(item).decode('utf-8'))
         print(temp_dict)
+    else:
+        abort(404)
     return make_response(jsonify(temp_dict))
 
 
