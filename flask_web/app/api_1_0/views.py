@@ -31,7 +31,7 @@ def get_test_data(species):
             if item[-6:] != '_chart':
                 print(r.get(item))
                 print(type(r.get(item)))
-                temp_dict[item] = r.get(item)
+                temp_dict[item] = r.get(item).decode('utf-8')
         print('this is ..')
         print(temp_dict)
     return make_response(jsonify(temp_dict))
