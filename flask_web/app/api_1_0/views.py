@@ -28,7 +28,7 @@ def get_test_data(species):
     temp_dict = {}
     if species in topic_dict:
         for item in topic_dict[species]:
-            temp_dict[item] = r.get(item)
+            temp_dict[item] = r.get(item).decode('utf-8')
         print('this is ..')
         print(temp_dict)
     return make_response(jsonify(temp_dict))
