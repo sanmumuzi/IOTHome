@@ -152,7 +152,7 @@ def stupid_code_one(msg, average=None):
 
 
 def on_message(client, userdata, msg):
-    print('receive: {}{:->20s}'.format(msg.topic, str(msg.payload)))
+    # print('receive: {}{:->20s}'.format(msg.topic, str(msg.payload)))
     text = msg.payload.decode('utf-8')
     if msg.topic in topic_list:
         if msg.topic in double_data.keys():
