@@ -29,11 +29,11 @@ def get_test_data(species):
     if species in topic_dict:
         for item in topic_dict[species]:
             if item[-6:] != '_chart':
-                print(r.get(item))
-                print(type(r.get(item)))
+                # print(r.get(item))
+                # print(type(r.get(item)))
                 temp_dict[item] = r.get(item).decode('utf-8')
-        print('this is ..')
-        print(temp_dict)
+        # print('this is ..')
+        # print(temp_dict)
     else:
         abort(404)
     return make_response(jsonify(temp_dict))
