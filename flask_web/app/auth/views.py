@@ -36,7 +36,7 @@ def actuator():
 @auth.route('/use_actuator', methods=['POST'])
 @login_required
 def test_post():
-    print('----------------------------------------')
+    print('---------------------------------------')
     print(request.form.get('topic'))
     print(request.form.get('parameter'))
     print('---------------------------------------')

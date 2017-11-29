@@ -1,7 +1,7 @@
 from flask import jsonify, request, abort, g, url_for, current_app, make_response
 from .. import db
 from .import api
-from .mqttpub import topic_dict, topic_dict_for_android
+from .mqttpub_bak import topic_dict, topic_dict_for_android
 from .authentication import auth
 import paho.mqtt.publish as mqttpub
 from ..main.mqttsub import actuator_dict, Conversion_table, actuator_num_list
