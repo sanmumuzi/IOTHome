@@ -47,6 +47,7 @@ print('------------------------start mqttsub.py--------------------------------'
 
 actuator_dict = {
     'air cleaner': '关闭',
+    'air cleaner/level': '均衡',
     'air condition/display': '室内温度',
     'air condition/dry/heat': '关闭',
     'air condition/health': '关闭',
@@ -88,6 +89,9 @@ Conversion_table = {
     'both': '健康+换气',
     'indoor': '室内温度',
     'outdoor': '室外温度',
+    'mute': '静音',
+    'balanced': '均衡',
+    'performance': '性能'
 }
 
 # 对多个传感器传输的数据进行求平均
