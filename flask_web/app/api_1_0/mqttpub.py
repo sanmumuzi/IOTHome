@@ -122,16 +122,16 @@ topic_dict_for_android = {
 }
 
 
-def stupid_code_one(msg, average=None):
-    for temp_item, temp_value in topic_dict.items():  # 这个地方很蠢
-        if msg.topic in temp_value.keys():
-            if average:
-                temp_num = round(average, 2)  # we should except error.
-                topic_dict[temp_item][msg.topic] = temp_num
-                topic_dict_for_android[temp_item][msg.topic] = temp_num
-            else:
-                topic_dict[temp_item][msg.topic] = msg.payload.decode('utf-8')
-                topic_dict_for_android[temp_item][msg.topic] = msg.payload.decode('utf-8')
+# def stupid_code_one(msg, average=None):
+#     for temp_item, temp_value in topic_dict.items():  # 这个地方很蠢
+#         if msg.topic in temp_value.keys():
+#             if average:
+#                 temp_num = round(average, 2)  # we should except error.
+#                 topic_dict[temp_item][msg.topic] = temp_num
+#                 topic_dict_for_android[temp_item][msg.topic] = temp_num
+#             else:
+#                 topic_dict[temp_item][msg.topic] = msg.payload.decode('utf-8')
+#                 topic_dict_for_android[temp_item][msg.topic] = msg.payload.decode('utf-8')
 
 
 def modify_data_in_dict(topic, value):

@@ -44,7 +44,6 @@ def search_data(topic_list, collection_name, topic_dict, topic_dict_for_android)
                 })
                 # print(data_avg)
                 start_date += datetime.timedelta(hours=1)
-            # print('hello, fuck you!')
             # mqttpub.single(topic_name + '_chart', json.dumps(data_list), hostname=pi_intranet_ip)
             # topic_dict['chart'][topic_name + '_chart'] = data_list
             topic_name += '_chart'
