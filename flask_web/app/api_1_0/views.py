@@ -46,7 +46,7 @@ def get_test_chart_data(species):
         for item in topic_dict[species]:
             if item[-6:] == '_chart':
                 temp_dict[item] = json.loads(r.get(item).decode('utf-8'))
-        print(temp_dict)
+        # print(temp_dict)
     else:
         abort(404)
     return make_response(jsonify(temp_dict))
