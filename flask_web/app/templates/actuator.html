@@ -16,12 +16,25 @@
             <td>开关</td>
             <td id="air_text"></td>
         </tr>
+        <tr>
+            <td>等级</td>
+            <td id="air_cleaner_level"></td>
+        </tr>
         </tbody>
     </table>
 </div>
 <div>
+<div>
+    <h3>开关</h3>
     <button type="button" class="btn btn-primary" onclick="func_air_open()">开启</button>
     <button type="button" class="btn btn-primary" onclick="func_air_off()">关闭</button>
+</div>
+<div>
+    <h3>等级</h3>
+    <button type="button" class="btn btn-primary" onclick="func_air_cleaner_mute()">静音</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_cleaner_balanced()">均衡</button>
+    <button type="button" class="btn btn-primary" onclick="func_air_cleaner_performance()">性能</button>
+</div>
 </div>
 <h2>空调执行器</h2>
 <div class="table-responsive">

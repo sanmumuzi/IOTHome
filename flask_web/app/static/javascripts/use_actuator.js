@@ -12,6 +12,24 @@ var func_air_off = function(){
         'parameter': 'off'});
 }
 
+var func_air_cleaner_mute = function(){
+    $.post("/auth/use_actuator", {
+        'topic': 'air cleaner/level',
+        'parameter': 'mute'});
+}
+
+var func_air_cleaner_balanced = function(){
+    $.post("/auth/use_actuator", {
+        'topic': 'air cleaner/level',
+        'parameter': 'balanced'});
+}
+
+var func_air_cleaner_performance = function(){
+    $.post("/auth/use_actuator", {
+        'topic': 'air cleaner/level',
+        'parameter': 'performance'});
+}
+
 var func_air_switch_on = function(){
     $('#air_switch_text').text('开启');
     $.post("/auth/use_actuator", {
