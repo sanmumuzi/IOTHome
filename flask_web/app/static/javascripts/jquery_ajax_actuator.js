@@ -5,7 +5,7 @@ $(document).ready(function(){
     function show_actuator(){
         $.getJSON("/auth/actuator_data", function(data){
             $('#air_text').text(data['air cleaner']);
-            $('#air_cleaner_level').text(data['air cleaner/level'])
+            // $('#air_cleaner_level').text(data['air cleaner/level']);
             $('#air_switch_text').text(data['air condition/switch']);
             $('#air_mode_text').text(data['air condition/mode']);
             $('#air_temperature_text').text(data['air condition/temperature']);
