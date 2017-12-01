@@ -25,7 +25,7 @@ r = Redis(host='localhost', port=6379, db=0)
 
 
 @api.route('/sensor_data/<species>')  # use redis
-@login_required
+# @login_required
 def get_test_data(species):
     temp_dict = {}
     if species in topic_dict:
@@ -42,7 +42,7 @@ def get_test_data(species):
 
 
 @api.route('/sensor_chart_data/<species>')
-@login_required
+# @login_required
 def get_test_chart_data(species):
     temp_dict = {}
     if species in topic_dict:
