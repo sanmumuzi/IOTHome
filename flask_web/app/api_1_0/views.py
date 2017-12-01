@@ -3,6 +3,7 @@ from .. import db
 from .import api
 from .mqttpub_bak import topic_dict, topic_dict_for_android
 from .authentication import auth
+from flask_login import login_required
 import paho.mqtt.publish as mqttpub
 from ..main.mqttsub import actuator_dict, Conversion_table, actuator_num_list
 from redis import Redis
@@ -24,6 +25,7 @@ r = Redis(host='localhost', port=6379, db=0)
 
 
 @api.route('/sensor_data/<species>')  # use redis
+@login_required
 def get_test_data(species):
     temp_dict = {}
     if species in topic_dict:
@@ -40,6 +42,7 @@ def get_test_data(species):
 
 
 @api.route('/sensor_chart_data/<species>')
+@login_required
 def get_test_chart_data(species):
     temp_dict = {}
     if species in topic_dict:
