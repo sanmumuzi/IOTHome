@@ -1,5 +1,5 @@
 from flask import render_template, jsonify, redirect, url_for
-
+from flask_login import login_required
 from . import main
 import requests
 import json
@@ -16,6 +16,7 @@ import json
 #     return json.loads(r.text)
 
 
+@login_required
 @main.route('/')
 def index():
     return redirect(url_for('main.temperature_and_humidity'))
@@ -48,11 +49,13 @@ def index():
 #     return render_template('404.html'), 404
 
 
+@login_required
 @main.route('/temperature_and_humidity')
 def temperature_and_humidity():
     return render_template('TemAndHum.html')
 
 
+@login_required
 @main.route('/air_quality')
 def air_quality():
     return render_template('air_quality.html')
