@@ -53,3 +53,4 @@ def test_post():
 @login_required
 def get_actuator():
     return jsonify(actuator_dict)
+
