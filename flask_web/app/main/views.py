@@ -17,7 +17,7 @@ import json
 
 
 @main.route('/')
-# @login_required
+@login_required
 def index():
     return redirect(url_for('main.temperature_and_humidity'))
 
@@ -50,13 +50,13 @@ def index():
 
 
 @main.route('/temperature_and_humidity')
-# @login_required
+@login_required
 def temperature_and_humidity():
     return render_template('TemAndHum.html')
 
 
 @main.route('/air_quality')
-# @login_required
+@login_required
 def air_quality():
     return render_template('air_quality.html')
 
